@@ -61,6 +61,11 @@ http://localhost:5000/swagger
 
 You will also need to update the `NEXT_PUBLIC_API_URL` argument for the `frontend` service in the `docker-compose.yml` file.
 
+## Data Persistence
+
+- For testing purposes, the database data does not persist between runs.
+- Each time you start the application, a fresh database is initialized.
+
 ## Stopping the Application
 
 To stop the application and remove the containers, run:
