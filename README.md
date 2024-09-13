@@ -1,33 +1,97 @@
 # Course Assignment
 
-## Requirements
+This is a full-stack application consisting of a .NET 8 backend API and a Next.js frontend. The application allows users to manage courses, including creating, retrieving, and deleting courses.
 
-Develop simple Web application, in any language of your choosing, which manages "Course" records:
+## Prerequisites
 
-- The application should manage the following information about a Course: id, subject, courseNumber, description. All fields other than id are strings
-- There should be a simple UI/UX to add/remove courses, search courses, and show list of current courses. This does not have to be fancy as we are not looking for a UI Designer.
-- The application should store data in an external database or another data storage system.
+- [Docker](https://www.docker.com/get-started) installed on your machine.
 
-Features:
+## Setting Up Environment Variables
 
-- The application should allow user to search for a course by description, with partial matches like "Bio" would find "Introduction to Biology"
-- The application should support deleting a Course
-- The application should support inserting a new Course
-- courseNumber must be formatted as a three-digit, zero-padded integer like "033". Adding records which are not three-digit numbers results in an validation message to the user
-- The application should prevent inserting duplicate courses, where subject and number must be unique
+1. Create a `.env` file in the root directory.
 
-Addtional Information:
+```bash
+touch .env
+```
 
-- The application must be started with minimal setup using readily available libraries (e.g. `npm start` for Node.js) and sufficiently described in a README.md
-- The application must be complete and sent as a zipped package over email or a github link
-- The application will only be tested in Google Chrome
+2. Add the following content to the `.env` file:
 
-Example Course records:
-1, "BIO", 101, "Introduction to Biology"
-2, "MAT", 045, "Business Statistics"
+```env
+POSTGRES_USER=your_postgres_username
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_DB=your_database_name
+```
 
-Suggestions:
+3. Important: Ensure that the `.env` file is saved in the same directory as the `docker-compose.yml` file.
 
-- Use an API to manage data and connect to the API from a front-end, Javascript application
-- Show that tests have been used to validate behavior
-- Runnable via Docker or Kubernetes (optional)
+## Building and Running the Application
+
+1. Build and start the application using Docker Compose:
+
+```bash
+docker-compose up --build
+```
+
+- This command will build the Docker images and start all the services defined in the `docker-compose.yml` file.
+- The first build may take several minutes.
+
+## Accessing the Application
+
+Once the application is running, you can access it via the following URLs:
+
+- Frontend Application:
+
+```
+http://localhost:3000
+```
+
+Backend API Swagger UI:
+
+```
+http://localhost:5000/swagger
+```
+
+**NOTE**: If these ports are in use, you can change them in the `docker-compose.yml` file. However, the backend API is configured to allow requests from the frontend application. If you change the frontend URL or port, you may need to update the CORS settings in the backend API (appsettings.json):
+
+```json
+  "CorsSettings": {
+    "AllowedOrigins": ["http://localhost:3000", "https://localhost:3000"]
+  },
+```
+
+You will also need to update the `NEXT_PUBLIC_API_URL` argument for the `frontend` service in the `docker-compose.yml` file.
+
+## Stopping the Application
+
+To stop the application and remove the containers, run:
+
+```bash
+docker-compose down
+```
+
+---
+
+## Screenshots
+
+1. Fetching all courses
+
+![Fetching all courses](./docs/imgs/1.png)
+
+2. Filtering by Description
+
+![Filtering by Description](./docs/imgs/2.png)
+
+3. Deleting a Course
+
+![Deleting a Course](./docs/imgs/3.png)
+![Course Deleted](./docs/imgs/4.png)
+
+4. Creating a Course - validation:
+
+![Validation](./docs/imgs/5.png)
+![Validation](./docs/imgs/6.png)
+![Validation](./docs/imgs/7.png)
+
+5. Docker Desktop
+
+![Docker Desktop](./docs/imgs/8.png)
