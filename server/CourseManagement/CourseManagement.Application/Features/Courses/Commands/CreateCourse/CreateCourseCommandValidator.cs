@@ -1,10 +1,12 @@
-﻿using CourseManagement.Application.Interfaces;
-using FluentValidation;
+﻿using FluentValidation;
+using CourseManagement.Application.Interfaces;
 
 namespace CourseManagement.Application.Features.Courses.Commands.CreateCourse;
 
 public class CreateCourseCommandValidator : AbstractValidator<CreateCourseCommand>
 {
+    public const string DUPLICATED_COURSE_ERROR_MESSAGE = "A course with the same subject and course number already exists.";
+
     private readonly ICourseRepository _repository;
 
     public CreateCourseCommandValidator(ICourseRepository repository)
@@ -29,7 +31,7 @@ public class CreateCourseCommandValidator : AbstractValidator<CreateCourseComman
 
         RuleFor(x => x)
             .MustAsync(BeUniqueCourseAsync)
-            .WithMessage("A course with the same subject and course number already exists.");
+            .WithMessage(DUPLICATED_COURSE_ERROR_MESSAGE);
     }
 
     private async Task<bool> BeUniqueCourseAsync(CreateCourseCommand command, CancellationToken cancellationToken)
