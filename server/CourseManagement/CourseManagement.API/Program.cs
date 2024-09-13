@@ -1,4 +1,5 @@
 using CourseManagement.API.Middleware;
+using CourseManagement.API.Settings;
 using CourseManagement.Application.Extensions;
 using CourseManagement.Infrastructure.Data;
 using CourseManagement.Infrastructure.Extensions;
@@ -7,6 +8,8 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.Configure<CorsSettings>(builder.Configuration.GetSection("CorsSettings"));
 
 builder.Services.AddControllers();
 
@@ -20,6 +23,17 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policyBuilder =>
+    {
+        var allowedOrigins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
+        policyBuilder.WithOrigins(allowedOrigins)
+                     .AllowAnyHeader()
+                     .AllowAnyMethod();
+    });
 });
 
 var app = builder.Build();
@@ -36,6 +50,8 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthorization();
 
