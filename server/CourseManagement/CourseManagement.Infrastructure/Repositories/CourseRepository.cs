@@ -44,4 +44,10 @@ public class CourseRepository : ICourseRepository
         return await _context.Courses
             .AnyAsync(c => c.Subject == subject && c.CourseNumber == courseNumber, cancellationToken);
     }
+
+    public async Task DeleteAsync(Course course, CancellationToken cancellationToken = default)
+    {
+        _context.Courses.Remove(course);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

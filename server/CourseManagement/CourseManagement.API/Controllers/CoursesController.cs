@@ -4,6 +4,7 @@ using CourseManagement.Application.Features.Courses.Dtos;
 using CourseManagement.Application.Features.Courses.Queries.GetCourses;
 using CourseManagement.Application.Features.Courses.Commands.CreateCourse;
 using CourseManagement.Application.Features.Courses.Queries.GetCourseById;
+using CourseManagement.Application.Features.Courses.Commands.DeleteCourse;
 
 namespace CourseManagement.API.Controllers
 {
@@ -70,6 +71,23 @@ namespace CourseManagement.API.Controllers
         {
             var courseId = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetCourseById), new { id = courseId }, null);
+        }
+
+        /// <summary>
+        /// Deletes a course by ID.
+        /// </summary>
+        /// <param name="id">The ID of the course to delete.</param>
+        /// <returns>No content.</returns>
+        /// <response code="204">Course deleted successfully.</response>
+        /// <response code="404">Course not found.</response>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteCourse(int id)
+        {
+            var command = new DeleteCourseCommand { Id = id };
+            await _mediator.Send(command);
+            return NoContent();
         }
     }
 }
