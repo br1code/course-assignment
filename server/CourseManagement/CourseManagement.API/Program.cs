@@ -1,3 +1,4 @@
+using CourseManagement.API.Middleware;
 using CourseManagement.Application.Extensions;
 using CourseManagement.Infrastructure.Data;
 using CourseManagement.Infrastructure.Extensions;
@@ -31,6 +32,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
