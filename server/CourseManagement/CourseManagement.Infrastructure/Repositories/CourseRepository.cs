@@ -32,4 +32,16 @@ public class CourseRepository : ICourseRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
+
+    public async Task AddAsync(Course course, CancellationToken cancellationToken = default)
+    {
+        _context.Courses.Add(course);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<bool> CourseExistsAsync(string subject, string courseNumber, CancellationToken cancellationToken = default)
+    {
+        return await _context.Courses
+            .AnyAsync(c => c.Subject == subject && c.CourseNumber == courseNumber, cancellationToken);
+    }
 }
