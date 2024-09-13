@@ -1,4 +1,5 @@
 using CourseManagement.Application.Extensions;
+using CourseManagement.Infrastructure.Data;
 using CourseManagement.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+await DatabaseInitializer.SeedAsync(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
