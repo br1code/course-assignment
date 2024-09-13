@@ -4,6 +4,6 @@ namespace CourseManagement.Application.Interfaces;
 
 public interface ICourseRepository
 {
-    Task<IEnumerable<Course>> GetAllAsync();
-    Task<Course> GetByIdAsync(int id);
+    Task<List<Course>> GetCoursesAsync(string? description = null, CancellationToken cancellationToken = default);
+    Task<Course?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 }

@@ -14,13 +14,22 @@ public class CourseRepository : ICourseRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Course>> GetAllAsync()
+    public async Task<List<Course>> GetCoursesAsync(string? description = null, CancellationToken cancellationToken = default)
     {
-        return await _context.Courses.ToListAsync();
+        var query = _context.Courses.AsNoTracking();
+
+        if (!string.IsNullOrEmpty(description))
+        {
+            query = query.Where(c => c.Description.Contains(description));
+        }
+
+        return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<Course> GetByIdAsync(int id)
+    public async Task<Course?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _context.Courses.FindAsync(id);
+        return await _context.Courses
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 }
