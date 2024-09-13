@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using FluentValidation;
+using CourseManagement.Application.Exceptions;
 
 namespace CourseManagement.API.Middleware;
 
@@ -27,6 +28,12 @@ public class ExceptionHandlingMiddleware
             var result = JsonSerializer.Serialize(new { errors });
             await context.Response.WriteAsync(result);
         }
-        // TODO: Handle other exceptions like not found ...
+        catch (NotFoundException ex)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            context.Response.ContentType = "application/json";
+            var result = JsonSerializer.Serialize(new { error = ex.Message });
+            await context.Response.WriteAsync(result);
+        }
     }
 }
